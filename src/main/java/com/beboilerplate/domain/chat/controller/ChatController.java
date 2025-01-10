@@ -1,4 +1,4 @@
-package com.beboilerplate.domain.chat;
+package com.beboilerplate.domain.chat.controller;
 
 import com.beboilerplate.domain.chat.dto.ChatDto;
 import lombok.RequiredArgsConstructor;

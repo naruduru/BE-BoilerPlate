@@ -27,6 +27,7 @@ public class SecurityConfig {
     private static final String[] PERMITTED_API_URL = {
             "/",
             "/api/auth/**",
+            "/ws/**",
             "/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**",
     };
 
