@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AuthService {
 
     private static final String FILE_TYPE = "profile";
-    private final String REFRESH_TOKEN_PREFIX = "refresh:";
+    private static final String REFRESH_TOKEN_PREFIX = "refresh:";
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -34,8 +34,10 @@ public class AuthService {
     @Transactional
     public Long signup(SignUpRequest signUpRequest, MultipartFile multipartFile) {
         Member generatedMember = signUpRequest.toEntity(passwordEncoder);
-        String profileImageUrl = s3Service.uploadFile(FILE_TYPE, multipartFile);
-        generatedMember.setProfileImageUrl(profileImageUrl);
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            String profileImageUrl = s3Service.uploadFile(FILE_TYPE, multipartFile);
+            generatedMember.setProfileImageUrl(profileImageUrl);
+        }
         return memberRepository.save(generatedMember).getId();
     }
 
