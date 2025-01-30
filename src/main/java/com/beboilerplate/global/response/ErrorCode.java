@@ -30,6 +30,13 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "M001", "존재하지 않는 유저입니다."),
     ALREADY_EXIST_NICKNAME(400, "M002", "중복된 닉네임입니다."),
     ALREADY_EXIST_EMAIL(400, "M003", "이미 가입된 이메일입니다."),
+
+    // Chat
+    ROOM_NOT_FOUND(404, "C001", "존재하지 않는 채팅방입니다."),
+    ROOM_TYPE_NOT_FOUND(404, "C002", "존재하지 않는 채팅방 타입입니다."),
+
+    // Post
+    POST_NOT_FOUND(404, "P001", "존재하지 않는 게시글입니다."),
     ;
 
     private final int status;
