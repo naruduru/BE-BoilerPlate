@@ -30,14 +30,14 @@ public class S3Service {
 
     public String uploadFile(String fileType, MultipartFile multipartFile) {
 
-        if (multipartFile.isEmpty()) {
-            return null;
-        }
-
-        String originalFilename = multipartFile.getOriginalFilename();
+        String uploadFileName = "";
         String uploadFileUrl;
 
-        String uploadFileName = getUuidFileName(originalFilename);
+        if (multipartFile.getOriginalFilename() != null) {
+            String originalFilename = multipartFile.getOriginalFilename();
+            uploadFileName = getUuidFileName(originalFilename);
+        }
+
         try (InputStream inputStream = multipartFile.getInputStream()){
 
             String uploadFilePath = fileType + "/" + getFolderName();
@@ -63,7 +63,7 @@ public class S3Service {
 
     private String getUuidFileName(String fileName) {
 
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
         validateFileFormat(extension);
 
         return UUID.randomUUID() + "." + extension;
