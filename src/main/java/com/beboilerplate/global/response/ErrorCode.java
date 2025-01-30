@@ -14,6 +14,8 @@ public enum ErrorCode {
     INPUT_TYPE_INVALID(400, "G004", "입력 타입이 유효하지 않습니다."),
     HTTP_MESSAGE_NOT_READABLE(400, "G005", "request message body가 없거나, 값 타입이 올바르지 않습니다."),
     HTTP_HEADER_INVALID(400, "G006", "request header가 유효하지 않습니다."),
+    FILE_UPLOAD_ERROR(400, "G007", "파일 업로드를 실패했습니다."),
+    FILE_EXTENSION_INVALID(400, "G008", "지원하지 않는 파일 형식입니다."),
 
     // Auth
     INVALID_TOKEN(400, "AU001", "유효하지 않은 토큰입니다."),
