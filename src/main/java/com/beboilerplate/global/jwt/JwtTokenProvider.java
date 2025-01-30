@@ -1,6 +1,6 @@
 package com.beboilerplate.global.jwt;
 
-import com.beboilerplate.domain.member.entity.Role;
+import com.beboilerplate.domain.member.entity.enums.Role;
 import com.beboilerplate.domain.member.exception.InvalidTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -48,6 +48,20 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String createRefreshToken(String email) {
+        Claims claims = Jwts.claims().setSubject(email);
+
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + refreshTokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public boolean validateToken(String token) {
         Claims claims = getClaims(token);
         return !claims.getExpiration().before(new Date());
@@ -73,6 +87,4 @@ public class JwtTokenProvider {
             throw new InvalidTokenException();
         }
     }
-
-
 }
