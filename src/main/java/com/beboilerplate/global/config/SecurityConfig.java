@@ -5,6 +5,7 @@ import com.beboilerplate.global.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,7 +27,7 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final String[] PERMITTED_API_URL = {
+    private static final String[] PERMITTED_URL = {
             "/",
             "/api/v1/auth/**",
             "/ws/**",
@@ -62,7 +63,8 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
-                                .requestMatchers(PERMITTED_API_URL).permitAll()
+                                .requestMatchers(PERMITTED_URL).permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/posts/*").permitAll()
                                 .anyRequest().authenticated()
                 )
 

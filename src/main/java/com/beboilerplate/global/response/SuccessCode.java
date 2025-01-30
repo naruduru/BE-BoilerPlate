@@ -18,6 +18,10 @@ public enum SuccessCode {
     // Chat
     GET_CHATS_SUCCESS(200, "C001", "채팅 목록 조회에 성공하였습니다."),
 
+    // Post
+    REGISTER_POST_SUCCESS(201, "P001", "게시글 등록에 성공하였습니다."),
+    GET_POSTS_SUCCESS(200, "P002", "게시글 목록 조회에 성공하였습니다."),
+    GET_POST_DETAIL_SUCCESS(200, "P003", "게시글 상세 조회에 성공하였습니다."),
     ;
 
     private final int status;
