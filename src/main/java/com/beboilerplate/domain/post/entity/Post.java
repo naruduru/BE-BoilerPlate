@@ -29,6 +29,9 @@ public class Post extends BaseTimeEntity {
     @Column
     private int viewCount = 0;
 
+    @Column
+    private boolean deleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member author;
@@ -39,6 +42,15 @@ public class Post extends BaseTimeEntity {
     @Builder
     public Post(Member author, String title, String content) {
         this.author = author;
+        this.title = title;
+        this.content = content;
+    }
+
+    public void softDelete() {
+        this.deleted = true;
+    }
+
+    public void update(String title, String content) {
         this.title = title;
         this.content = content;
     }
