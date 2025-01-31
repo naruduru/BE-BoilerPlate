@@ -6,6 +6,7 @@ import com.beboilerplate.domain.member.dto.response.LoginResponse;
 import com.beboilerplate.domain.member.service.AuthService;
 import com.beboilerplate.global.response.SuccessCode;
 import com.beboilerplate.global.response.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @Operation(summary = "회원가입")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse> signup(
             @RequestPart SignUpRequest signUpRequest,
@@ -35,6 +37,7 @@ public class AuthController {
         return ResponseEntity.ok(SuccessResponse.of(SuccessCode.SIGN_UP_SUCCESS, memberId));
     }
 
+    @Operation(summary = "일반 로그인")
     @PostMapping("/login/normal")
     public ResponseEntity<SuccessResponse> normalLogin(@RequestBody LoginRequest loginRequest) {
         LoginResponse result = authService.normalLogin(loginRequest);
