@@ -1,8 +1,8 @@
 package com.beboilerplate.domain.member.dto.response;
 
-import com.beboilerplate.domain.member.entity.LoginType;
+import com.beboilerplate.domain.member.entity.enums.LoginType;
 import com.beboilerplate.domain.member.entity.Member;
-import com.beboilerplate.domain.member.entity.Role;
+import com.beboilerplate.domain.member.entity.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -29,5 +29,4 @@ public class MemberResponse {
                 .loginType(member.getLoginType())
                 .build();
     }
-
 }

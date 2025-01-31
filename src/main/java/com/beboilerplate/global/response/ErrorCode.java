@@ -14,6 +14,8 @@ public enum ErrorCode {
     INPUT_TYPE_INVALID(400, "G004", "입력 타입이 유효하지 않습니다."),
     HTTP_MESSAGE_NOT_READABLE(400, "G005", "request message body가 없거나, 값 타입이 올바르지 않습니다."),
     HTTP_HEADER_INVALID(400, "G006", "request header가 유효하지 않습니다."),
+    FILE_UPLOAD_ERROR(400, "G007", "파일 업로드를 실패했습니다."),
+    FILE_EXTENSION_INVALID(400, "G008", "지원하지 않는 파일 형식입니다."),
 
     // Auth
     INVALID_TOKEN(400, "AU001", "유효하지 않은 토큰입니다."),
@@ -22,11 +24,19 @@ public enum ErrorCode {
     EXPIRED_OR_PREVIOUS_REFRESH_TOKEN(403, "AU004", "만료되었거나 이전에 발급된 Refresh Token입니다."),
     ACCESS_DENIED(401, "AU005", "유효한 인증 정보가 아닙니다."),
     EXPIRED_ACCESS_TOKEN(401, "AU006", "Access Token이 만료되었습니다. 토큰을 재발급해주세요"),
+    PASSWORD_MISMATCH(400, "AU007", "패스워드가 일치하지 않습니다"),
 
     // Member
     MEMBER_NOT_FOUND(404, "M001", "존재하지 않는 유저입니다."),
     ALREADY_EXIST_NICKNAME(400, "M002", "중복된 닉네임입니다."),
     ALREADY_EXIST_EMAIL(400, "M003", "이미 가입된 이메일입니다."),
+
+    // Chat
+    ROOM_NOT_FOUND(404, "C001", "존재하지 않는 채팅방입니다."),
+    ROOM_TYPE_NOT_FOUND(404, "C002", "존재하지 않는 채팅방 타입입니다."),
+
+    // Post
+    POST_NOT_FOUND(404, "P001", "존재하지 않는 게시글입니다."),
     ;
 
     private final int status;

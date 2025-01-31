@@ -1,11 +1,10 @@
 package com.beboilerplate.domain.member.entity;
 
+import com.beboilerplate.domain.member.entity.enums.LoginType;
+import com.beboilerplate.domain.member.entity.enums.Role;
 import com.beboilerplate.global.util.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
@@ -19,9 +18,17 @@ public class Member extends BaseTimeEntity {
     @Column(columnDefinition = "VARCHAR(100)", unique = true, nullable = false)
     private String email;
 
-    @Column(columnDefinition = "VARCHAR(10)", unique = true)
+    @Column
+    private String password;
+
+    @Column
+    private String socialId;
+
+    @Column(unique = true)
     private String nickname;
 
+    @Column
+    @Setter
     private String profileImageUrl;
 
     @Column(columnDefinition = "VARCHAR(1)")
@@ -34,9 +41,10 @@ public class Member extends BaseTimeEntity {
     private LoginType loginType;
 
     @Builder
-    public Member(String email, String nickname, String profileImageUrl,
-                  String useYn, Role role, LoginType loginType) {
+    public Member(String email, String password, String nickname,
+                  String profileImageUrl, String useYn, Role role, LoginType loginType) {
         this.email = email;
+        this.password = password;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.useYn = useYn;
