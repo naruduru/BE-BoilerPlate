@@ -85,4 +85,13 @@ public class PostController {
                 postService.deletePost(postId))
         );
     }
+
+    @Operation(summary = "게시글 좋아요/좋아요 취소")
+    @PostMapping("/{postId}/likes")
+    public ResponseEntity<SuccessResponse> likePost(@PathVariable Long postId) {
+        return ResponseEntity.ok(SuccessResponse.of(
+                SuccessCode.ADD_POST_SUCCESS,
+                postService.likePost(postId)
+        ));
+    }
 }

@@ -24,6 +24,7 @@ public enum SuccessCode {
     GET_POST_DETAIL_SUCCESS(200, "POST003", "게시글 상세 조회에 성공하였습니다."),
     DELETE_POST_SUCCESS(200, "POST004", "게시글 삭제에 성공하였습니다."),
     UPDATE_POST_SUCCESS(200, "POST005", "게시글 수정에 성공하였습니다."),
+    LIKE_POST_SUCCESS(201, "POST006", "좋아요/좋아요 취소에 성공하였습니다."),
 
     // Comment
     ADD_COMMENT_SUCCESS(201, "COMMENT001", "댓글 등록에 성공하였습니다."),
