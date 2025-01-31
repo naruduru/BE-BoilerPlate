@@ -39,6 +39,9 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<PostImage> postImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<PostLike> postLikes = new ArrayList<>();
+
     @Builder
     public Post(Member author, String title, String content) {
         this.author = author;

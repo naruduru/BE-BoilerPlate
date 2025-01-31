@@ -3,9 +3,12 @@ package com.beboilerplate.domain.post.service;
 import com.beboilerplate.domain.member.entity.Member;
 import com.beboilerplate.domain.post.dto.request.PostRequest;
 import com.beboilerplate.domain.post.dto.response.PostDetailResponse;
+import com.beboilerplate.domain.post.dto.response.PostLikeResponse;
 import com.beboilerplate.domain.post.dto.response.PostSimpleResponse;
 import com.beboilerplate.domain.post.entity.Post;
 import com.beboilerplate.domain.post.entity.PostImage;
+import com.beboilerplate.domain.post.entity.PostLike;
+import com.beboilerplate.domain.post.repository.PostLikeRepository;
 import com.beboilerplate.domain.post.repository.PostRepository;
 import com.beboilerplate.global.config.s3.S3Service;
 import com.beboilerplate.global.exception.EntityNotFoundException;
@@ -34,6 +37,7 @@ public class PostService {
     private static final String FILE_TYPE = "post";
     
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
     private final AuthUtil authUtil;
     private final S3Service s3Service;
 
@@ -88,6 +92,20 @@ public class PostService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
         validatePostOfMember(loginMember.getId(), post.getAuthor().getId());
         post.softDelete();
+
+        return PostDetailResponse.from(post);
+    }
+
+    @Transactional
+    public PostDetailResponse likePost(Long postId) {
+        Member loginMember = authUtil.getLoginMember();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
+        if (loginMember.getPostLikes().stream().anyMatch(postLike -> postLike.getPost().equals(post))) {
+            postLikeRepository.deleteByMemberAndPost(loginMember, post);
+        } else {
+            postLikeRepository.save(new PostLike(loginMember, post));
+        }
 
         return PostDetailResponse.from(post);
     }
