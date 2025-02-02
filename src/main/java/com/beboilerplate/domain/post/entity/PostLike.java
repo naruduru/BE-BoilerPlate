@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -26,12 +25,12 @@ public class PostLike {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @CreatedDate
     private LocalDateTime likedAt;
 
     public PostLike(Member member, Post post) {
         this.member = member;
         this.post = post;
+        this.likedAt = LocalDateTime.now();
         member.getPostLikes().add(this);
         post.getPostLikes().add(this);
     }

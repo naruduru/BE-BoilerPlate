@@ -101,12 +101,15 @@ public class PostService {
         Member loginMember = authUtil.getLoginMember();
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
-        if (loginMember.getPostLikes().stream().anyMatch(postLike -> postLike.getPost().equals(post))) {
-            postLikeRepository.deleteByMemberAndPost(loginMember, post);
-        } else {
-            postLikeRepository.save(new PostLike(loginMember, post));
+
+        if (!loginMember.getPostLikes().isEmpty()) {
+            if (loginMember.getPostLikes().stream().anyMatch(postLike -> postLike.getPost().equals(post))) {
+                postLikeRepository.deleteByMemberAndPost(loginMember, post);
+                return PostDetailResponse.from(post);
+            }
         }
 
+        postLikeRepository.save(new PostLike(loginMember, post));
         return PostDetailResponse.from(post);
     }
 
