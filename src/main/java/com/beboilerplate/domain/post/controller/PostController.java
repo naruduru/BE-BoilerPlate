@@ -90,7 +90,7 @@ public class PostController {
     @PostMapping("/{postId}/likes")
     public ResponseEntity<SuccessResponse> likePost(@PathVariable Long postId) {
         return ResponseEntity.ok(SuccessResponse.of(
-                SuccessCode.ADD_POST_SUCCESS,
+                SuccessCode.LIKE_POST_SUCCESS,
                 postService.likePost(postId)
         ));
     }
