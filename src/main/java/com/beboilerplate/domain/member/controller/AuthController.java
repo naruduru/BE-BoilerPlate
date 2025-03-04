@@ -6,6 +6,7 @@ import com.beboilerplate.domain.member.dto.response.LoginResponse;
 import com.beboilerplate.domain.member.service.AuthService;
 import com.beboilerplate.global.response.SuccessCode;
 import com.beboilerplate.global.response.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
