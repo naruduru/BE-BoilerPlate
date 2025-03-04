@@ -3,12 +3,16 @@ package com.beboilerplate.domain.post.service;
 import com.beboilerplate.domain.member.entity.Member;
 import com.beboilerplate.domain.post.dto.request.PostRequest;
 import com.beboilerplate.domain.post.dto.response.PostDetailResponse;
+import com.beboilerplate.domain.post.dto.response.PostLikeResponse;
 import com.beboilerplate.domain.post.dto.response.PostSimpleResponse;
 import com.beboilerplate.domain.post.entity.Post;
 import com.beboilerplate.domain.post.entity.PostImage;
+import com.beboilerplate.domain.post.entity.PostLike;
+import com.beboilerplate.domain.post.repository.PostLikeRepository;
 import com.beboilerplate.domain.post.repository.PostRepository;
 import com.beboilerplate.global.config.s3.S3Service;
 import com.beboilerplate.global.exception.EntityNotFoundException;
+import com.beboilerplate.global.exception.IllegalArgumentException;
 import com.beboilerplate.global.response.ErrorCode;
 import com.beboilerplate.global.util.AuthUtil;
 import jakarta.servlet.http.Cookie;
@@ -33,11 +37,12 @@ public class PostService {
     private static final String FILE_TYPE = "post";
     
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
     private final AuthUtil authUtil;
     private final S3Service s3Service;
 
     @Transactional
-    public Long register(PostRequest postRequest, List<MultipartFile> images) {
+    public Long addPost(PostRequest postRequest, List<MultipartFile> images) {
         Member loginMember = authUtil.getLoginMember();
         Post createdPost = postRequest.toEntity(loginMember);
         if (images != null && !images.isEmpty()) {
@@ -66,7 +71,46 @@ public class PostService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
         addCookieForViewCount(post, req, res);
 
-        return PostDetailResponse.from(postRepository.save(post));
+        return PostDetailResponse.from(post);
+    }
+
+    @Transactional
+    public PostDetailResponse updatePost(Long postId, PostRequest postRequest, List<MultipartFile> images) {
+        Member loginMember = authUtil.getLoginMember();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
+        validatePostOfMember(loginMember.getId(), post.getAuthor().getId());
+        post.update(postRequest.getTitle(), postRequest.getContent());
+
+        return PostDetailResponse.from(post);
+    }
+
+    @Transactional
+    public PostDetailResponse deletePost(Long postId) {
+        Member loginMember = authUtil.getLoginMember();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
+        validatePostOfMember(loginMember.getId(), post.getAuthor().getId());
+        post.softDelete();
+
+        return PostDetailResponse.from(post);
+    }
+
+    @Transactional
+    public PostDetailResponse likePost(Long postId) {
+        Member loginMember = authUtil.getLoginMember();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
+
+        if (!loginMember.getPostLikes().isEmpty()) {
+            if (loginMember.getPostLikes().stream().anyMatch(postLike -> postLike.getPost().equals(post))) {
+                postLikeRepository.deleteByMemberAndPost(loginMember, post);
+                return PostDetailResponse.from(post);
+            }
+        }
+
+        postLikeRepository.save(new PostLike(loginMember, post));
+        return PostDetailResponse.from(post);
     }
 
     private String uploadImage(MultipartFile image) {
@@ -119,5 +163,11 @@ public class PostService {
 
         // 6) 최종적으로 response 에 쿠키 추가
         res.addCookie(postViewCookie);
+    }
+
+    private void validatePostOfMember(Long memberId, Long authorId) {
+        if (!memberId.equals(authorId)) {
+            throw new IllegalArgumentException(ErrorCode.COMMENT_NOT_BELONG_TO_MEMBER);
+        }
     }
 }

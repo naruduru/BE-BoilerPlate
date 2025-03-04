@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "인증 API", description = "회원가입, 일반 로그인")
+@Tag(name = "Auth", description = "인증 API")
 public class AuthController {
 
     private final AuthService authService;
@@ -25,6 +25,7 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @Operation(summary = "회원가입")
     @PostMapping(value = "/signup/normal", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse> signup(
             @RequestPart SignUpRequest signUpRequest,
@@ -35,6 +36,7 @@ public class AuthController {
         return ResponseEntity.ok(SuccessResponse.of(SuccessCode.SIGN_UP_SUCCESS, memberId));
     }
 
+    @Operation(summary = "일반 로그인")
     @PostMapping("/login/normal")
     public ResponseEntity<SuccessResponse> normalLogin(@RequestBody LoginRequest loginRequest) {
         LoginResponse result = authService.normalLogin(loginRequest);

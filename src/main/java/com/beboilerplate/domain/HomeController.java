@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "접속 테스트 API", description = "루트(/) 경로 접속 테스트")
+@Tag(name = "Home", description = "루트(/) 경로 접속 테스트")
 public class HomeController {
 
     @GetMapping("/")

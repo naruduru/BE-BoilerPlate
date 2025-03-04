@@ -2,9 +2,13 @@ package com.beboilerplate.domain.member.entity;
 
 import com.beboilerplate.domain.member.entity.enums.LoginType;
 import com.beboilerplate.domain.member.entity.enums.Role;
+import com.beboilerplate.domain.post.entity.PostLike;
 import com.beboilerplate.global.util.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -39,6 +43,9 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private LoginType loginType;
+
+    @OneToMany(mappedBy = "member")
+    private List<PostLike> postLikes = new ArrayList<>();
 
     @Builder
     public Member(String email, String password, String nickname,

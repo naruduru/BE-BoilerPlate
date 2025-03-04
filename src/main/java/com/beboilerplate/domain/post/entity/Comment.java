@@ -14,38 +14,38 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(50)")
-    private String title;
-
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false)
     private String content;
-
-    @Column
-    private int viewCount = 0;
 
     @Column
     private boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member author;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    private List<PostImage> postImages = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post")
-    private List<PostLike> postLikes = new ArrayList<>();
+    @OneToMany(mappedBy = "parent")
+    private List<Comment> replies = new ArrayList<>();
 
     @Builder
-    public Post(Member author, String title, String content) {
+    public Comment(Comment parent, Post post, Member author, String content) {
+        this.parent = parent;
+        this.post = post;
         this.author = author;
-        this.title = title;
         this.content = content;
     }
 
@@ -53,12 +53,11 @@ public class Post extends BaseTimeEntity {
         this.deleted = true;
     }
 
-    public void update(String title, String content) {
-        this.title = title;
+    public void update(String content) {
         this.content = content;
     }
 
-    public void addViewCount() {
-        viewCount++;
+    public String getContent() {
+        return deleted ? "삭제된 메시지입니다." : this.content;
     }
 }

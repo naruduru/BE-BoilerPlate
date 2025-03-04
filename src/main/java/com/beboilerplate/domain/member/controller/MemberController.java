@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
-@Tag(name = "유저 API", description = "회원가입, 로그인")
+@Tag(name = "Members", description = "유저 API")
 public class MemberController {
 
     private final MemberService memberService;

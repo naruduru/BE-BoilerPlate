@@ -18,9 +18,11 @@ public class PostDetailResponse {
     private String title;
     private String content;
     private long viewCount;
+    private long likeCount;
     private String createdAt;
     private String updatedAt;
     private List<String> postImageUrls;
+    private List<PostLikeResponse> postLikeResponses;
 
     public static PostDetailResponse from(Post post) {
         return PostDetailResponse.builder()
@@ -29,9 +31,11 @@ public class PostDetailResponse {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .viewCount(post.getViewCount())
+                .likeCount(post.getPostLikes().size())
                 .createdAt(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(post.getCreatedAt()))
                 .updatedAt(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(post.getUpdatedAt()))
                 .postImageUrls(post.getPostImages().stream().map(PostImage::getUrl).toList())
+                .postLikeResponses(post.getPostLikes().stream().map(PostLikeResponse::from).toList())
                 .build();
     }
 }
