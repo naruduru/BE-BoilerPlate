@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @Operation(summary = "회원가입")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/signup/normal", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse> signup(
             @RequestPart SignUpRequest signUpRequest,
             @RequestPart(required = false) MultipartFile multipartFile
