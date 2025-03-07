@@ -1,6 +1,6 @@
 package com.beboilerplate.global.util;
 
-import com.beboilerplate.domain.chat.ChatMessage;
+import com.beboilerplate.domain.chat.dto.ChatDto;
 import com.beboilerplate.domain.chat.service.ChatRedisService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
+        ChatDto chatMessage = objectMapper.readValue(message.getPayload(), ChatDto.class);
 
         // 메시지 저장
         chatRedisService.saveMessage(chatMessage.getRoomId(), chatMessage);

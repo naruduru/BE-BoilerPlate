@@ -1,6 +1,6 @@
 package com.beboilerplate.domain.chat.controller;
 
-import com.beboilerplate.domain.chat.ChatMessage;
+import com.beboilerplate.domain.chat.dto.ChatDto;
 import com.beboilerplate.domain.chat.service.ChatRedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class CharRedisController {
      * 메시지 저장
      */
     @PostMapping("/{roomId}/message")
-    public ResponseEntity<Void> saveMessage(@PathVariable String roomId, @RequestBody ChatMessage message) {
+    public ResponseEntity<Void> saveMessage(@PathVariable String roomId, @RequestBody ChatDto message) {
         chatRedisService.saveMessage(roomId, message);
         return ResponseEntity.ok().build();
     }
@@ -33,9 +33,9 @@ public class CharRedisController {
      * 메시지 조회
      */
     @GetMapping("/{roomId}/messages")
-    public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable String roomId,
+    public ResponseEntity<List<ChatDto>> getMessages(@PathVariable String roomId,
                                                          @RequestParam(defaultValue = "20") int limit) {
-        List<ChatMessage> messages = chatRedisService.getMessages(roomId, limit);
+        List<ChatDto> messages = chatRedisService.getMessages(roomId, limit);
         return ResponseEntity.ok(messages);
     }
 

@@ -1,6 +1,6 @@
 package com.beboilerplate.domain.chat.service;
 
-import com.beboilerplate.domain.chat.ChatMessage;
+import com.beboilerplate.domain.chat.dto.ChatDto;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +17,14 @@ public class ChatRedisService {
     }
 
     // 메시지 저장
-    public void saveMessage(String roomId, ChatMessage message) {
+    public void saveMessage(String roomId, ChatDto message) {
         redisTemplate.opsForList().leftPush("chat:" + roomId + ":messages", message);
     }
 
     // 메시지 조회
-    public List<ChatMessage> getMessages(String roomId, int limit) {
+    public List<ChatDto> getMessages(String roomId, int limit) {
         List<Object> messages = redisTemplate.opsForList().range("chat:" + roomId + ":messages", 0, limit - 1);
-        return messages.stream().map(msg -> (ChatMessage) msg).toList();
+        return messages.stream().map(msg -> (ChatDto) msg).toList();
     }
 
     // 읽음 여부 저장
