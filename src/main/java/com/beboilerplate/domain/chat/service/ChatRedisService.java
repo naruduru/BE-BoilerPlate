@@ -4,6 +4,7 @@ import com.beboilerplate.domain.chat.dto.ChatDto;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -18,12 +19,23 @@ public class ChatRedisService {
 
     // 메시지 저장
     public void saveMessage(String roomId, ChatDto message) {
-        redisTemplate.opsForList().leftPush("chat:" + roomId + ":messages", message);
+        redisTemplate.opsForList().rightPush("chat:" + roomId + ":messages", message);
     }
 
     // 메시지 조회
     public List<ChatDto> getMessages(String roomId, int limit) {
-        List<Object> messages = redisTemplate.opsForList().range("chat:" + roomId + ":messages", 0, limit - 1);
+
+        Long size = redisTemplate.opsForList().size("chat:" + roomId + ":messages");
+
+        if (size == null || size == 0) {
+            return Collections.emptyList(); // Return an empty list if the key does not exist or is empty
+        }
+
+        // Calculate the start and end index
+        long start = Math.max(size - limit, 0);
+        long end = size - 1;
+
+        List<Object> messages = redisTemplate.opsForList().range("chat:" + roomId + ":messages", start, end);
         return messages.stream().map(msg -> (ChatDto) msg).toList();
     }
 
