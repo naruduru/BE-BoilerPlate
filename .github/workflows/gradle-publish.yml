@@ -38,6 +38,6 @@ jobs:
       run: |
         sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
           cd ~/springboot-app
-          ./gradlew build
+          echo "$SERVER_PASSWORD" | sudo -S ./gradlew build
           nohup java -jar build/libs/*.jar --server.port=8080 > app.log 2>&1 &
         EOF
