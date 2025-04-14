@@ -37,7 +37,8 @@ jobs:
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
         sshpass -p "$SSH_PASSWORD" ssh -t -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
-          echo "$SSH_PASSWORD" | cd ~/springboot-app
-          echo "$SSH_PASSWORD" | sudo -S ./gradlew build
+          cd ~/springboot-app
+          chmod +x ./gradlew  # Gradle Wrapper에 실행 권한 부여
+          ./gradlew clean build || { echo "Gradle build failed"; exit 1; }
           nohup java -jar build/libs/*.jar --server.port=8080 > app.log 2>&1 &
         EOF
