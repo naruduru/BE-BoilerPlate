@@ -1,0 +1,35 @@
+name: Deploy Spring Boot App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Upload Spring Boot project to server
+      run: |
+        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
+          mkdir -p ~/springboot-app
+        EOF
+        sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./* $SSH_USER@$SSH_HOST:~/springboot-app/
+
+    - name: Build and run Spring Boot project on server
+      run: |
+        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
+          cd ~/springboot-app
+          ./gradlew build
+          nohup java -jar build/libs/*.jar --server.port=8080 > app.log 2>&1 &
+        EOF
